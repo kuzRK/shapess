@@ -12,21 +12,25 @@ namespace topit
   };
   struct IDraw {
     virtual p_t begin() const = 0;
-    virtual p_t next() const = 0;
+    virtual p_t next(p_t) const = 0;
     virtual ~IDraw() = default;
   };
   struct Dot: IDraw {
     Dot(int x, int y);
     explicit Dot(p_t dd);
     p_t begin() const override;
-    p_t next() const override;
+    p_t next(p_t) const override;
     p_t d;
   };
-
+  size_t points(const IDraw& d, pt** pts,l size_t s);
+  f_t frame(const p_t* pts, size_t s);
 }
 int main()
 {
-  using namespace topit;
+  using topit::Dot;
+  using topit::IDraw;
+  using topit::f_t;
+  using topit::p_t;
   IDraw * shps[3] = {};
   p_t * pts = nullptr;
   size_t s = 0;
@@ -35,6 +39,10 @@ int main()
     shps[0] = new Dot(0,0);
     shps[1] = new Dot(5,7);
     shps[2] = new Dot(-5,-2);
+    for (size_t i = 0; i < 3; ++i) {
+      s += points(*(shps[i]), &pts, s)
+    }
+    f_t fr = frame(pts, s);
   } catch (...) {
     err = 2;
     std::cerr << "bad drawing\n";
