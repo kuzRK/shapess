@@ -24,6 +24,8 @@ namespace topit
   };
   size_t points(const IDraw& d, pt** pts,l size_t s);
   f_t frame(const p_t* pts, size_t s);
+  char * canvas(f_t fr, char fill);
+  void paint(char * cnv, f_t fr, p_t p, char fill);
 }
 int main()
 {
@@ -43,6 +45,11 @@ int main()
       s += points(*(shps[i]), &pts, s)
     }
     f_t fr = frame(pts, s);
+    char * cnv = canvas(fr, '.');
+    for (size_t i = 0; i < s; ++i) {
+      paint(cnv, fr, pts[i], '#');
+    }
+    delete[] cnv;
   } catch (...) {
     err = 2;
     std::cerr << "bad drawing\n";
@@ -51,6 +58,7 @@ int main()
   delete shps[1];
   delete shps[2];
   delete[] pts;
+  return err;
 }
 bool topit::operator==(p_t a, p_t b) {
   return a.x == b.x && a.y == b.y;
