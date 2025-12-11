@@ -25,10 +25,28 @@ namespace topit
   int min(int a, int b);
   int max(int a, int b);
   struct HSeg: IDraw {
-    HSeg(int x1, int x2, int y);
+    HSeg(int x1, int y1, int x2, int y2);
+    explicit HSeg(p_t a_, p_t b_);
     p_t begin() const override;
     p_t next(p_t) const override;
-    int x1, x2, y;
+    p_t a;
+    p_t b;
+  };
+  struct VSeg: IDraw {
+    explicit VSeg(p_t a_, p_t b_);
+    VSeg(int x1, int y1, int x2, int y2);
+    p_t begin() const override;
+    p_t next(p_t) const override;
+    p_t a;
+    p_t b;
+  };
+  struct Diag45: IDraw {
+    explicit Diag45(p_t a_, p_t b_);
+    Diag45(int x1, int y1, int x2, int y2);
+    p_t begin() const override;
+    p_t next(p_t) const override;
+    p_t a;
+    p_t b;
   };
   size_t points(const IDraw& d, p_t** pts, size_t s);
   f_t frame(const p_t* pts, size_t s);
@@ -96,9 +114,52 @@ int topit::min(int a, int b) {
 int topit::max(int a, int b) {
   return (a > b) ? a : b;
 }
-topit::HSeg::HSeg(int x1, int x2, int y):
-  IDraw(), x1(min(x1,x2)), x2(max(x1,x2)), y(y)
-{}
+topit::HSeg::HSeg(int x1, int y1,  int x2, int y2):
+  IDraw(), a{min(x1,x2), y1}, b{max(x1, x2), y2}
+{
+  if (y1 != y2) {
+    throw std::logic_error("Its not horisontal segment\n");
+  }
+}
+topit::HSeg::HSeg(p_t a_, p_t b_):
+  IDraw(), a{min(a_.y, b_.y), a_.y}, b{max(a_.y, b_.y), b_.y}
+{
+  if (a_.y != b_.y) {
+    throw std::logic_error("its not horisontal segment\n");
+  }
+}
+topit::VSeg::VSeg(p_t a_, p_t b_):
+  IDraw(), a{a_.x, min(a_.y, b_.y)}, b{b_.x, max(a_.y, b_.y)}
+{
+  if (a_.x != b_.x) {
+    throw std::logic_error("its not vertical segment\n");
+  }
+}
+topit::VSeg::VSeg(int x1, int y1, int x2, int y2):
+  IDraw(), a{x1, min(y1, y2)}, b{x2, max(y1,y2)}
+{
+  if (x1 != x2) {
+    throw std::logic_error("its not vertical segment");
+  }
+}
+topit::Diag45:Diag45(p_t a_, p_t b_):
+  IDraw(), a{a_}, b{b_}
+{
+  int dx = b_.x - a_.x;
+  int dy = b_.y - a_.y;
+  if (std::abs(dx) != std::abs(dy)) {
+    throw std::logic_error("its not 45 degree segment\n");
+  }
+}
+topit::Diag45::Diag45(int x1, int y1, int x2, int y2):
+  IDraw(), a{x1, y1}, b{x2, y2}
+{
+  int dx = x1 - x2;
+  int dy = y1 - y2;
+  if (std::abs(dx) != std::abs(dy)) {
+    throw std::logic_error("its not 45 degree segment\n");
+  }
+}
 topit::f_t topit::frame(const p_t * pts, size_t s)
 {
   f_t fr;
