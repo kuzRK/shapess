@@ -99,3 +99,28 @@ int topit::max(int a, int b) {
 topit::HSeg::HSeg(int x1, int x2, int y):
   IDraw(), x1(min(x1,x2)), x2(max(x1,x2)), y(y)
 {}
+topit::f_t topit::frame(const p_t * pts, size_t s)
+{
+  f_t fr;
+  int min_x = pts[0].x;
+  int max_x = pts[0].x;
+  int min_y = pts[0].y;
+  int max_y = pts[0].y;
+  for (size_t i = 0; i < s; ++i) {
+    if (pts[i].x < min_x) {
+      min_x = pts[i].x;
+    }
+    if (pts[i].x > max_x) {
+      max_x = pts[i].x;
+    }
+    if (pts[i].y < min_y) {
+      min_y = pts[i].y;
+    }
+    if (pts[i].y > max_y) {
+      max_y = pts[i].y;
+    }
+  }
+  fr.aa = {min_x, min_y};
+  fr.bb = {max_x, max_y};
+  return fr;
+}
