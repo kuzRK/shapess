@@ -1,24 +1,25 @@
 #include "HSeg.hpp"
 #include <stdexcept>
+#include <algorithm>
 topit::HSeg::HSeg(int x1, int y1,  int x2, int y2):
-  IDraw(), a{min(x1,x2), y1}, b{max(x1, x2), y2}
+  IDraw(), a{std::min(x1,x2), y1}, b{std::max(x1, x2), y2}
 {
   if (y1 != y2) {
     throw std::logic_error("Its not horisontal segment\n");
   }
 }
 topit::HSeg::HSeg(p_t a_, p_t b_):
-  IDraw(), a{min(a_.y, b_.y), a_.y}, b{max(a_.y, b_.y), b_.y}
+  IDraw(), a{std::min(a_.y, b_.y), a_.y}, b{std::max(a_.y, b_.y), b_.y}
 {
   if (a_.y != b_.y) {
     throw std::logic_error("its not horisontal segment\n");
   }
 }
-topit::p_t topit::HrzLine::begin() const
+topit::p_t topit::HSeg::begin() const
 {
   return a;
 }
-topit::p_t topit::HrzLine::next(p_t prev) const
+topit::p_t topit::HSeg::next(p_t prev) const
 {
   if (prev == b) {
     return b;

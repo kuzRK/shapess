@@ -1,13 +1,15 @@
 #include "VSeg.hpp"
+#include <stdexcept>
+#include <algorithm>
 topit::VSeg::VSeg(p_t a_, p_t b_):
-  IDraw(), a{a_.x, min(a_.y, b_.y)}, b{b_.x, max(a_.y, b_.y)}
+  IDraw(), a{a_.x, std::min(a_.y, b_.y)}, b{b_.x, std::max(a_.y, b_.y)}
 {
   if (a_.x != b_.x) {
     throw std::logic_error("its not vertical segment\n");
   }
 }
 topit::VSeg::VSeg(int x1, int y1, int x2, int y2):
-  IDraw(), a{x1, min(y1, y2)}, b{x2, max(y1,y2)}
+  IDraw(), a{x1, std::min(y1, y2)}, b{x2, std::max(y1,y2)}
 {
   if (x1 != x2) {
     throw std::logic_error("its not vertical segment");

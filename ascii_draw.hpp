@@ -4,4 +4,7 @@
 #include "idraw.hpp"
 #include "dot.hpp"
 #include "canvas.cpp"
+#include "VSeg.hpp"
+#include "HSeg.hpp"
+#include "Diag45.hpp"
 #endif

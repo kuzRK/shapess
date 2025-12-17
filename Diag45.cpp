@@ -1,4 +1,4 @@
-#include Diag45.hpp
+#include "Diag45.hpp"
 #include <stdexcept>
 topit::Diag45::Diag45(int x1, int y1, int x2, int y2):
   IDraw(), a{x1, y1}, b{x2, y2}
